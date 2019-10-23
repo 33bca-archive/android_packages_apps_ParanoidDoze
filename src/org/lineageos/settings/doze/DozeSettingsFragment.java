@@ -27,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemProperties;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,6 +57,8 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
 
     private Handler mHandler = new Handler();
 
+    private boolean mHasPickupSensor;
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.doze_settings);
@@ -69,6 +72,8 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
         }
 
         boolean dozeEnabled = DozeUtils.isDozeEnabled(getActivity());
+
+        mHasPickupSensor = !(SystemProperties.get("ro.sensor.pickup").isEmpty());
 
         mAlwaysOnDisplayPreference = (SwitchPreference) findPreference(DozeUtils.ALWAYS_ON_DISPLAY);
         mAlwaysOnDisplayPreference.setEnabled(dozeEnabled);
@@ -91,6 +96,11 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
         mPocketPreference = (SwitchPreference) findPreference(DozeUtils.GESTURE_POCKET_KEY);
         mPocketPreference.setEnabled(dozeEnabled);
         mPocketPreference.setOnPreferenceChangeListener(this);
+
+        // Hide pickup sensor related features if the device doesn't provide the props
+        if (!mHasPickupSensor) {
+            getPreferenceScreen().removePreference(pickupSensorCategory);
+        }
 
         // Hide proximity sensor related features if the device doesn't support them
         if (!DozeUtils.getProxCheckBeforePulse(getActivity())) {
