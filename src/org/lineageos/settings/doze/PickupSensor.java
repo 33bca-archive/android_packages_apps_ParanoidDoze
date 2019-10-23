@@ -23,6 +23,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.util.Log;
 
 import java.util.concurrent.ExecutorService;
@@ -38,6 +39,7 @@ public class PickupSensor implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private String mSensorName;
     private Context mContext;
     private ExecutorService mExecutorService;
 
@@ -46,7 +48,8 @@ public class PickupSensor implements SensorEventListener {
     public PickupSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = DozeUtils.getSensor(mSensorManager, "xiaomi.sensor.pickup");
+        mSensorName = SystemProperties.get("ro.sensor.pickup");
+        mSensor = DozeUtils.getSensor(mSensorManager, mSensorName);
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
