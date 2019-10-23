@@ -58,6 +58,7 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
     private Handler mHandler = new Handler();
 
     private boolean mHasPickupSensor;
+    private boolean mHasProximitySensor;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -74,6 +75,7 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
         boolean dozeEnabled = DozeUtils.isDozeEnabled(getActivity());
 
         mHasPickupSensor = !(SystemProperties.get("ro.sensor.pickup").isEmpty());
+        mHasProximitySensor = !(SystemProperties.get("ro.sensor.proximity").isEmpty());
 
         mAlwaysOnDisplayPreference = (SwitchPreference) findPreference(DozeUtils.ALWAYS_ON_DISPLAY);
         mAlwaysOnDisplayPreference.setEnabled(dozeEnabled);
@@ -103,7 +105,7 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
         }
 
         // Hide proximity sensor related features if the device doesn't support them
-        if (!DozeUtils.getProxCheckBeforePulse(getActivity())) {
+        if (!mHasProximitySensor || !DozeUtils.getProxCheckBeforePulse(getActivity())) {
             getPreferenceScreen().removePreference(proximitySensorCategory);
         }
 
