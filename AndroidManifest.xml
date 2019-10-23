@@ -31,7 +31,7 @@
         android:targetSdkVersion="24"/>
 
     <application
-        android:label="@string/device_settings_app_name"
+        android:label="@string/doze_settings_app_name"
         android:persistent="true">
 
         <receiver android:name=".BootCompletedReceiver">
@@ -57,7 +57,7 @@
                 android:value="com.android.settings.category.ia.display" />
             <meta-data
                 android:name="com.android.settings.summary"
-                android:value="@string/ambient_display_title" />
+                android:value="@string/ambient_display_summary" />
         </activity>
 
     </application>
